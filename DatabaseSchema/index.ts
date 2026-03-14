@@ -2,22 +2,28 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface UserSchema extends Document {
     id: string;
+    firstname?: string;
+    lastname?: string;
     email: string;
-    verifiedEmail: boolean;
-    name: string;
-    givenName: string;
-    familyName: string;
-    picture: string;
+    password?: string;
+    verifiedEmail?: boolean;
+    name?: string;
+    givenName?: string;
+    familyName?: string;
+    picture?: string;
     createdAt: Date;
     updatedAt: Date;
 }
 
-const UserData: Schema<UserSchema> = new Schema(
+const UserSchemaModel: Schema = new Schema(
     {
-        id: { type: String, required: true, unique: true },
+        id: { type: String, unique: true, sparse: true },
+        firstname: { type: String },
+        lastname: { type: String },
         email: { type: String, required: true, unique: true },
+        password: { type: String },
         verifiedEmail: { type: Boolean, default: false },
-        name: { type: String, required: true },
+        name: { type: String },
         givenName: { type: String },
         familyName: { type: String },
         picture: { type: String },
@@ -27,5 +33,6 @@ const UserData: Schema<UserSchema> = new Schema(
     }
 );
 
-const User = mongoose.model<UserSchema>("User", UserData);
-export default User;
+const User = mongoose.model<UserSchema>("users", UserSchemaModel);
+
+export { User };

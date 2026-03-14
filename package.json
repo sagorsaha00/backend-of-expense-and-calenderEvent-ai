@@ -3,10 +3,12 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun run server.ts"
+    "dev": "bun run server.ts",
+    "supervisor": "bun run supervisor.ts"
   },
   "private": true,
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/bun": "latest",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6"
@@ -15,12 +17,19 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@langchain/core": "^1.1.32",
+    "@langchain/groq": "^1.1.5",
+    "@langchain/langgraph": "^1.2.2",
+    "@langchain/langgraph-supervisor": "^1.0.1",
     "axios": "^1.13.6",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "googleapis": "^171.4.0",
+    "langchain": "^1.2.32",
     "mongodb": "^7.1.0",
-    "mongoose": "^9.3.0"
+    "mongoose": "^9.3.0",
+    "zod": "^4.3.6"
   }
 }
