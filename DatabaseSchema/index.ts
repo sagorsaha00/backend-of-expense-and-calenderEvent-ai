@@ -35,4 +35,27 @@ const UserSchemaModel: Schema = new Schema(
 
 const User = mongoose.model<UserSchema>("users", UserSchemaModel);
 
-export { User };
+export interface ExpenseSchema extends Document {
+    title: string;
+    amount: number;
+    date: Date;
+    userId: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const ExpenseSchemaModel: Schema = new Schema(
+    {
+        title: { type: String, required: true },
+        amount: { type: Number, required: true },
+        date: { type: Date, required: true },
+        userId: { type: String, required: true },
+    },
+    {
+        timestamps: true,
+    }
+);
+
+const Expense = mongoose.model<ExpenseSchema>("expenses", ExpenseSchemaModel);
+
+export { User, Expense };

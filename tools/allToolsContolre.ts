@@ -1,16 +1,15 @@
 import { tool } from "langchain";
 import { z } from "zod";
 import { getCalendar } from "./server";
-import { calendarAgent } from "./toolCalls";
+import { calendarAgent } from "./agentToolsCall";
 
-// ❌ REMOVE THIS LINE — runs before login, no credentials yet
-// const calendar = getCalendar()
+
 
 export const createCalendarEvent = tool(
     async ({ title, startTime, endTime, attendees, location }: any) => {
         console.log("createCalendar event call");
         try {
-            const calendar = getCalendar(); // ✅ called at runtime, credentials already set
+            const calendar = getCalendar();
 
             const event = {
                 summary: title,
@@ -55,7 +54,7 @@ export const createCalendarEvent = tool(
 export const getAvailableTimeSlots = tool(
     async ({ attendees, date }) => {
         try {
-            const calendar = getCalendar(); // ✅ inside function
+            const calendar = getCalendar();
 
             const response = await calendar.freebusy.query({
                 requestBody: {
