@@ -5,12 +5,9 @@ import dotenv from "dotenv";
 import { google } from "googleapis";
 import axios from "axios";
 import ConnectDB from "./db";
-import { functionController } from './src/controller/userController';
-import { TokenService } from './src/token/servcie';
-import {RefreshTokenSchema} from './src/DatabaseSchema/refreshToken'
-
-const tokenService = new TokenService(RefreshTokenSchema);
-const func = new functionController(tokenService);
+import { userController } from "./router/user";
+import authroute from './router/user'
+import tokenroute from './router/token'
 dotenv.config();
 
 const app = express();
@@ -25,8 +22,8 @@ const oauth2Client = new google.auth.OAuth2(
     process.env.REDIRECT_URI
 );
 
- 
- 
+
+
 export function getCalendar() {
     return google.calendar({ version: "v3", auth: oauth2Client });
 }
@@ -34,6 +31,8 @@ export function getCalendar() {
 app.get('/dashboard', (req, res) => {
     res.json('ok');
 });
+app.use('/auth', authroute)
+app.use('/token', tokenroute)
 
 app.get("/auth/google", (req: Request, res: Response) => {
     const url = oauth2Client.generateAuthUrl({
@@ -62,10 +61,10 @@ app.get("/api/callback/login/user", async (req: Request, res: Response) => {
             return res.status(500).send("No access token returned from Google");
         }
 
-        // FIX 3: Set credentials on the shared client so getCalendar() works
+
         oauth2Client.setCredentials(tokens);
 
-        // FIX 4: Auto-save new tokens when Google silently rotates them
+
         oauth2Client.on("tokens", (newTokens) => {
             oauth2Client.setCredentials(newTokens);
             console.log("🔄 Tokens refreshed automatically");
@@ -82,11 +81,11 @@ app.get("/api/callback/login/user", async (req: Request, res: Response) => {
         const user = {
             ...userInfo.data,
             access_token: tokens.access_token,
-            refresh_token: tokens.refresh_token ?? null,  // save this!
+            refresh_token: tokens.refresh_token ?? null,
             token_expiry: tokens.expiry_date ?? null,
         };
 
-        await func.saveGoogleUser(user);   // added await so errors don't get swallowed
+        await userController.saveGoogleUser(user);
 
         res.redirect("http://localhost:3001/dashboard");
     } catch (error) {
