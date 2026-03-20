@@ -1,7 +1,7 @@
 import readline from "readline/promises";
 import { stdin as input, stdout as output } from "process";
 import { User } from "../DatabaseSchema/index.js";
-import { createAgent } from "./agent.js";
+import { createSupervisorAgent } from "../tools/agentToolsCall.js";
 
 const rl = readline.createInterface({ input, output });
 
@@ -20,7 +20,7 @@ async function login() {
 
 async function main() {
     const userId = await login();
-    const agent = createAgent(userId);
+    const agent = createSupervisorAgent(userId);
 
     while (true) {
         const question = await rl.question("You: ");
@@ -32,7 +32,9 @@ async function main() {
 
         try {
             const result = await agent.invoke({
-                messages: [{ role: "user", content: question }]
+                messages: [{ role: "user", content: question }, {
+                    configurable: { thread_id: "expense_thread_1" }
+                }]
             });
             const lastMessage = result.messages[result.messages.length - 1];
             console.log("Assistant:", lastMessage!.content);

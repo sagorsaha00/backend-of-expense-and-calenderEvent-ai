@@ -2,7 +2,7 @@ import { ChatGroq } from "@langchain/groq"
 import { MemorySaver, MessagesAnnotation, StateGraph, type LangGraphRunnableConfig, } from "@langchain/langgraph"
 import "dotenv/config";
 import { ToolNode } from "@langchain/langgraph/prebuilt"
-import ConnectDB from "../db.js"
+import ConnectDB from "../../db.js"
 import type { AIMessage } from "langchain";
 import { initTools } from "./tool.js";
 
@@ -43,10 +43,11 @@ export function createAgent(userId: string) {
         const response: any = await modelWithTools.invoke([
             {
                 role: "system",
-                content: `You are an expense manager assistant; the current datetime is ${new Date().toISOString()}; when the user provides a title and amount you MUST call the add_expense tool with those exact values and the userId to store the record, and when the user asks to view, list, or show expenses you MUST call the get_expenses tool with the userId and return the formatted results to the user and if user ask for grouping or chart  the expenses by day, month, or year you MUST call the get_expenses_by_grouping tool with the userId and this tool proper way excute with those exact values to get the formatted results to the user. The userId is ${userId}.
-    .`
+                content: `You are a helpful personal assistant for expenses and calendar scheduling.
+For expenses: the current datetime is ${new Date().toISOString()}; when the user provides a title and amount you MUST call the add_expense tool with those exact values and the userId to store the record, and when the user asks to view, list, or show expenses you MUST call the get_expenses tool with the userId and return the formatted results to the user and if user ask for grouping or chart the expenses by day, month, or year you MUST call the get_expenses_by_grouping tool with the userId and this tool proper way excute with those exact values to get the formatted results to the user.
+For calendar: Parse natural language scheduling requests (e.g., 'next Tuesday at 2pm') into proper ISO datetime formats. Use get_available_time_slots to check availability when needed. Use create_calendar_event to schedule events. Always confirm what was scheduled in your final response.
+The userId is ${userId}.`
             },
-
             ...state.messages
         ])
 
@@ -55,7 +56,7 @@ export function createAgent(userId: string) {
         //     console.log(chunk);
         // }
         return {
-            messages: response
+            messages: [response]
         }
     }
 

@@ -1,20 +1,38 @@
+import { createSupervisorAgent } from './agentToolsCall.js.js';
 import readline from "readline/promises";
 import { stdin as input, stdout as output } from "process";
+import { User } from "../DatabaseSchema/index.js";
 
 import { HumanMessage } from "@langchain/core/messages";
 import { Command } from "@langchain/langgraph";
 import type { HITLRequest, HITLResponse, Interrupt } from "langchain";
-import { supervisorAgent } from "./agentToolsCall";
+
 
 const rl = readline.createInterface({ input, output });
 
-const config = {
-    configurable: {
-        thread_id: "calendar-thread",
-    },
-};
+async function login() {
+    while (true) {
+        const email = await rl.question("Enter your email: ");
+        const user = await User.findOne({ email });
+        if (user) {
+            console.log(`Logged in as ${user.email}`);
+            return user.id;
+        } else {
+            console.log("User not found. Try again.");
+        }
+    }
+}
 
 async function start() {
+    const userId = await login();
+    const supervisorAgent = createSupervisorAgent(userId);
+
+    const config = {
+        configurable: {
+            thread_id: "calendar-thread",
+        },
+    };
+
     while (true) {
         const question = await rl.question("You: ");
 

@@ -4,12 +4,14 @@ import type { UserSchema } from "../DatabaseSchema";
 import { User } from "../DatabaseSchema";
 import bcrypt from 'bcrypt'
 import type { Request, Response } from 'express';
+import type { TokenService } from "../token/servcie";
+
 
 export class functionController {
-    constructor() { }
+    constructor(private tokenService: TokenService) { }
 
-    async saveGoogleUser(data: UserSchema) {
 
+    saveGoogleUser = async (data: UserSchema, req: Request, res: Response) => {
         try {
             console.log("data", data)
             let user = await User.findOne({ id: data.id });
@@ -18,6 +20,7 @@ export class functionController {
                 console.log("User already exists:", user.email);
                 return user;
             }
+
             user = new User({
                 id: data.id,
                 email: data.email,
@@ -29,16 +32,39 @@ export class functionController {
             });
 
             await user.save();
-            console.log("User saved successfully:", user.email);
-            return user;
+            const payload = { id: data.id, email: data.email };
+            console.log("payload", payload);
+
+            const accessToken = this.tokenService.genarateAccessToken(payload);
+            console.log("accessToken", accessToken);
+
+            const persistedRefreshToken = await this.tokenService.persistRefreshToken(payload);
+            const persistId = persistedRefreshToken.id.toHexString();
+            console.log('persistId', persistId)
+            console.log("persistedRefreshToken", persistedRefreshToken)
+            const refreshToken = this.tokenService.genarateRefreshToken({
+                ...payload,
+                id: persistId,
+            });
+
+            console.log("refreshToken", refreshToken)
+            return new Response(JSON.stringify({
+                userData: user,
+                token: { accessToken, refreshToken }
+            }), {
+                status: 201,
+                headers: { "Content-Type": "application/json" }
+            });
+
         } catch (err) {
             console.error("Error saving user:", err);
             throw err;
         }
     }
-    async registerFuncUser(req: Request, res: Response) {
-        try {
 
+
+    registerFuncUser = async (req: Request, res: Response) => {
+        try {
             const { firstname, lastname, email, password } = req.body;
             const hashedPassword = await bcrypt.hash(password, 10);
             let useremail = await User.findOne({ email: email });
@@ -50,9 +76,7 @@ export class functionController {
             }
 
             const user = new User({
-                firstname: firstname,
-                lastname: lastname,
-                email: email,
+                firstname, lastname, email,
                 password: hashedPassword
             });
 
@@ -64,12 +88,9 @@ export class functionController {
             });
 
         } catch (error) {
-
             return res.status(500).json({
-                message: "Server error",
-                error
+                message: "Server error", error
             });
-
         }
     }
 }

@@ -5,9 +5,12 @@ import dotenv from "dotenv";
 import { google } from "googleapis";
 import axios from "axios";
 import ConnectDB from "./db";
-import { functionController } from './controller/index';
+import { functionController } from './src/controller/userController';
+import { TokenService } from './src/token/servcie';
+import {RefreshTokenSchema} from './src/DatabaseSchema/refreshToken'
 
-const func = new functionController();
+const tokenService = new TokenService(RefreshTokenSchema);
+const func = new functionController(tokenService);
 dotenv.config();
 
 const app = express();
@@ -22,9 +25,8 @@ const oauth2Client = new google.auth.OAuth2(
     process.env.REDIRECT_URI
 );
 
-// ─── FIX 1: Export a function, not a bare instance ───────────────────────────
-// Call getCalendar() AFTER login — never at module load time.
-// This way the auth client always has valid credentials when used.
+ 
+ 
 export function getCalendar() {
     return google.calendar({ version: "v3", auth: oauth2Client });
 }
@@ -36,14 +38,13 @@ app.get('/dashboard', (req, res) => {
 app.get("/auth/google", (req: Request, res: Response) => {
     const url = oauth2Client.generateAuthUrl({
         access_type: "offline",
-        prompt: "consent",        
+        prompt: "consent",
         scope: [
             "https://www.googleapis.com/auth/userinfo.profile",
             "https://www.googleapis.com/auth/userinfo.email",
             "https://www.googleapis.com/auth/calendar"
         ],
     });
-    console.log("url", url);
     res.redirect(url);
 });
 

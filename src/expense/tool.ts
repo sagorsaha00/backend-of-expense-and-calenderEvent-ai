@@ -1,6 +1,7 @@
 import { Expense } from '../DatabaseSchema/index.js';
 import * as z from "zod"
 import { tool } from "langchain"
+import { createCalendarEvent, getAvailableTimeSlots, scheduleEvent } from "../tools/allToolsContolre.js";
 
 
 
@@ -157,6 +158,9 @@ export function initTools() {
     return [
         addExpense,
         getExpensesData,
-        getExpensesDatabyGroupingChart
+        getExpensesDatabyGroupingChart,
+        createCalendarEvent,
+        getAvailableTimeSlots,
+        scheduleEvent
     ]
 }

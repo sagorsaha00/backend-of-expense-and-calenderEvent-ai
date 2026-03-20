@@ -1,7 +1,6 @@
 import { tool } from "langchain";
 import { z } from "zod";
-import { getCalendar } from "./server";
-import { calendarAgent } from "./agentToolsCall";
+import { getCalendar } from "../../server";
 
 
 
@@ -90,6 +89,7 @@ export const getAvailableTimeSlots = tool(
 
 export const scheduleEvent = tool(
     async ({ request }) => {
+        const { calendarAgent } = await import("./agentToolsCall");
         const result = await calendarAgent.invoke({
             messages: [{ role: "user", content: request }]
         });
