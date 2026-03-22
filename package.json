@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run server.ts",
-    "supervisor": "bun run tools/supervisor.ts",
+    "supervisor": "bun run src/tools/supervisor.ts",
     "expense": "bun run  expense/server.ts"
   },
   "private": true,

@@ -15,7 +15,7 @@ import { initTools } from "./tool.js";
 ConnectDB().catch(console.error);
 
 export function createAgent(userId: string) {
-    const tools = initTools()
+    const tools = initTools(userId)
 
     /**
      * model calling
@@ -73,7 +73,7 @@ The userId is ${userId}.`
         if (!lastMessage?.tool_calls?.length) return "__end__";
 
         const toolCall = lastMessage.tool_calls[0];
-        console.log("shouldContinue - Tool called:", toolCall?.name, "with args:", toolCall?.args);
+
 
         if (toolCall?.name) {
             config.writer?.({

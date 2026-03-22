@@ -10,10 +10,11 @@ export const userController = new functionController(tokenService);
 const router = express.Router()
 
 
-router.post('/google', async (req, res) => {
+router.post('/googlelogin', async (req, res) => {
     const data = req.body;
     await userController.saveGoogleUser(data, res);
 })
 router.post('/register', (req, res) => userController.registerFuncUser(req, res))
 router.post('/login', (req, res) => userController.loginUser(req, res))
+router.get("/grouped/:userId", (req, res) => userController.getExpense(req, res));
 export default router

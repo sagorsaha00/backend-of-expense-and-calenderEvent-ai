@@ -11,8 +11,12 @@ export interface UserSchema extends Document {
     givenName?: string;
     familyName?: string;
     picture?: string;
+    access_token: string;
+    refresh_token: string;
+    token_expiry: number;
     createdAt: Date;
     updatedAt: Date;
+    userData?: string
 }
 
 const UserSchemaModel: Schema = new Schema(
@@ -27,6 +31,10 @@ const UserSchemaModel: Schema = new Schema(
         givenName: { type: String },
         familyName: { type: String },
         picture: { type: String },
+        access_token: { type: String },
+        refresh_token: { type: String },
+        token_expiry: { type: Number },
+
     },
     {
         timestamps: true,
