@@ -6,14 +6,14 @@ import { google } from "googleapis";
 import axios from "axios";
 import { Command } from "@langchain/langgraph";
 import type { HITLRequest, HITLResponse, Interrupt } from "langchain";
-import ConnectDB from "./db";
-import { userController } from "./router/user";
-import authroute from './router/user'
+import ConnectDB from "./db.js";
+import { userController } from "./router/user.js";
+import authroute from './router/user.js'
 import { HumanMessage } from "@langchain/core/messages";
 import tokenroute from './router/token'
-import { createSupervisorAgent } from "./src/expense/agentToolsCall";
-import { saveUserTokens } from "./src/store/tokenStore";
-import type { UserSchema } from "./src/DatabaseSchema";
+import { createSupervisorAgent } from "./src/expense/agentToolsCall.js";
+import { saveUserTokens } from "./src/store/tokenStore.js";
+import type { UserSchema } from "./src/DatabaseSchema.js";
 dotenv.config();
 
 const app = express();
@@ -93,8 +93,8 @@ app.get("/api/callback/login/user", async (req: Request, res: Response) => {
         };
 
         const result: UserSchema = await userController.saveGoogleUser(user);
-        
-     
+
+
         const id = result?.userData!.id
         saveUserTokens(id, {
             access_token: tokens.access_token,
