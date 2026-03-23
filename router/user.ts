@@ -1,6 +1,6 @@
 import express from 'express'
 import { TokenService } from '../src/token/servcie.js';
-import { RefreshTokenSchema } from '../src/DatabaseSchema/refreshToken'
+import { RefreshTokenSchema } from '../src/DatabaseSchema/refreshToken.js'
 import { functionController } from '../src/controller/userController';
 import verifyAccessToken from '../src/controller/varifyMiddleware';
 

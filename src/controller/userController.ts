@@ -5,7 +5,7 @@ import { Expense, User } from "../DatabaseSchema";
 import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 import type { TokenService } from "../token/servcie";
-import { RefreshTokenSchema } from "../DatabaseSchema/refreshToken";
+import { RefreshTokenSchema } from "../DatabaseSchema/refreshToken.js";
 import UserModel from "../DatabaseSchema/userModel";
 import mongoose from "mongoose";
 

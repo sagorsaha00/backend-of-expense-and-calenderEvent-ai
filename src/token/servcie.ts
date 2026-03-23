@@ -1,6 +1,6 @@
 import createHttpError from "http-errors";
 import * as jwt from "jsonwebtoken";
-import { RefreshTokenSchema } from "../DatabaseSchema/refreshToken";
+import { RefreshTokenSchema } from "../DatabaseSchema/refreshToken.js";
 import type { JwtPayload } from "jsonwebtoken";
 
 
