@@ -1,5 +1,5 @@
 import express from 'express'
-import { TokenService } from '../src/token/servcie';
+import { TokenService } from '../src/token/servcie.js';
 import { RefreshTokenSchema } from '../src/DatabaseSchema/refreshToken'
 import { functionController } from '../src/controller/userController';
 import verifyAccessToken from '../src/controller/varifyMiddleware';
