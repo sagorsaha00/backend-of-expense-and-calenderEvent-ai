@@ -53,7 +53,7 @@ export function createCalendarTools(userId: string) {
     const getAvailableTimeSlots = tool(
         async ({ attendees, date }) => {
             try {
-                const calendar = getCalendar(userId);
+                const calendar = await getCalendar(userId);
 
                 const response = await calendar.freebusy.query({
                     requestBody: {
