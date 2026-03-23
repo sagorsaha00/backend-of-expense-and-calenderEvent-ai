@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "bun run server.ts",
     "supervisor": "bun run src/tools/supervisor.ts",
-    "expense": "bun run  expense/server.ts"
+    "expense": "bun run  expense/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "private": true,
   "devDependencies": {
