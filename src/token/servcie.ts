@@ -55,9 +55,6 @@ export class TokenService {
 
         try {
             const savedRefreshToken = await newRefreshToken.save();
-
-
-
             return {
                 id: savedRefreshToken._id,
                 refreshToken: refreshToken,

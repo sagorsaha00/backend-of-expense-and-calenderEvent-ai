@@ -6,6 +6,8 @@ import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 import type { TokenService } from "../token/servcie";
 import { RefreshTokenSchema } from "../DatabaseSchema/refreshToken";
+import UserModel from "../DatabaseSchema/userModel";
+import mongoose from "mongoose";
 
 export class functionController {
     constructor(private tokenService: TokenService) { }
@@ -165,10 +167,20 @@ export class functionController {
                 userData: user,
                 token: { accessToken, refreshToken }
             };
+            res?.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: false, // production এ true
+                sameSite: "lax",
+                path: "/",
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+            });
 
-            if (res) {
-                return res.status(200).json(result);
-            }
+            res?.status(200).json({
+                userData: user,
+                accessToken: accessToken,
+            });
+
+
             return result;
 
         } catch (err) {
@@ -212,7 +224,7 @@ export class functionController {
                 },
                 { $sort: { _id: -1 } },
             ]);
-            console.log("group", grouped)
+           
             return res.json({
                 success: true,
                 groupBy,
@@ -224,5 +236,45 @@ export class functionController {
             return res.status(500).json({ success: false, message: "Something went wrong" });
         }
     }
+    setPassword = async (req: Request, res: Response) => {
+        try {
+            const { userId, password } = req.body;
+
+            
+            if (!userId || !password) {
+                return res.status(400).json({ message: "userId and password are required" });
+            }
+
+            if (!mongoose.Types.ObjectId.isValid(userId)) {
+                return res.status(400).json({ message: "Invalid userId format" });
+            }
+
+            if (password.length < 6) {
+                return res.status(400).json({ message: "Password must be at least 6 characters" });
+            }
+
+            const id = new mongoose.Types.ObjectId(userId);  
+
+            const user = await User.findById(id);
+
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            await User.findByIdAndUpdate(
+                id,
+                { password: hashedPassword },
+                { returnDocument: after }
+            );
+
+            return res.status(200).json({ message: "Password set successfully" });
+
+        } catch (error) {
+            return res.status(500).json({ message: "Internal server error", error });
+        }
+    };
+
 }
 
