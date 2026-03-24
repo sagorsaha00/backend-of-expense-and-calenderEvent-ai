@@ -5,8 +5,6 @@ import { Expense, User } from "../DatabaseSchema";
 import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 import type { TokenService } from "../token/servcie";
-import { RefreshTokenSchema } from "../DatabaseSchema/refreshToken.js";
-import UserModel from "../DatabaseSchema/userModel";
 import mongoose from "mongoose";
 
 export class functionController {
@@ -76,7 +74,7 @@ export class functionController {
     }
 
 
-    loginUser = async (req: Request, res: Response) => {
+    loginUser = async (req: Request, res: Response): Promise<Response | void> => {
         try {
             const { email, password } = req.body;
             console.log("email", email);
@@ -130,10 +128,10 @@ export class functionController {
     }
 
 
-    saveGoogleUser = async (data: UserSchema, res?: Response) => {
+    saveGoogleUser = async (data: any, res?: Response): Promise<UserSchema | Response | void> => {
         try {
+            console.log("user", data);
 
-            console.log("user", data)
             let user = await User.findOne({ id: data.id });
 
             if (!user) {
@@ -151,12 +149,12 @@ export class functionController {
                     refresh_token: data.refresh_token,
                     token_expiry: data.token_expiry
                 });
+
                 await user.save();
                 console.log("New Google user registered:", user.email);
             } else {
                 console.log("Google user logged in:", user.email);
             }
-
 
             const { accessToken, refreshToken } = await this.generateTokens(
                 data.id,
@@ -167,27 +165,23 @@ export class functionController {
                 userData: user,
                 token: { accessToken, refreshToken }
             };
-            res?.cookie("refreshToken", refreshToken, {
-                httpOnly: true,
-                secure: false, // production এ true
-                sameSite: "lax",
-                path: "/",
-                maxAge: 7 * 24 * 60 * 60 * 1000,
-            });
 
-            res?.status(200).json({
-                userData: user,
-                accessToken: accessToken,
-            });
-
-
-            return result;
-
-        } catch (err) {
-            console.error("Error with Google auth:", err);
             if (res) {
-                return res.status(500).json({ message: "Error saving user", error: err });
+                return res.status(200).json({
+                    userData: result,
+                    accessToken: accessToken,
+                });
             }
+
+            return user;
+        } catch (err) {
+            if (res) {
+                return res.status(500).json({
+                    message: "Error saving user",
+                    error: err instanceof Error ? err.message : "Unknown error",
+                });
+            }
+
             throw err;
         }
     }
@@ -224,7 +218,7 @@ export class functionController {
                 },
                 { $sort: { _id: -1 } },
             ]);
-           
+
             return res.json({
                 success: true,
                 groupBy,
@@ -240,7 +234,7 @@ export class functionController {
         try {
             const { userId, password } = req.body;
 
-            
+
             if (!userId || !password) {
                 return res.status(400).json({ message: "userId and password are required" });
             }
@@ -253,7 +247,7 @@ export class functionController {
                 return res.status(400).json({ message: "Password must be at least 6 characters" });
             }
 
-            const id = new mongoose.Types.ObjectId(userId);  
+            const id = new mongoose.Types.ObjectId(userId);
 
             const user = await User.findById(id);
 
@@ -266,8 +260,9 @@ export class functionController {
             await User.findByIdAndUpdate(
                 id,
                 { password: hashedPassword },
-                { returnDocument: after }
+                { returnDocument: "after" }
             );
+
 
             return res.status(200).json({ message: "Password set successfully" });
 

@@ -37,11 +37,6 @@ const oauth2Client = new google.auth.OAuth2(
 );
 
 
-
-
-
-
-
 app.get('/dashboard', (req, res) => {
     res.json('ok');
 });
@@ -92,10 +87,10 @@ app.get("/api/callback/login/user", async (req: Request, res: Response) => {
             token_expiry: tokens.expiry_date ?? null,
         };
 
-        const result: UserSchema = await userController.saveGoogleUser(user);
+        const result: UserSchema = await userController.saveGoogleUser(user) as UserSchema;
 
 
-        const id = result?.userData!.id
+        const id = result?.userData!.id as string
         saveUserTokens(id, {
             access_token: tokens.access_token,
             refresh_token: tokens.refresh_token,
@@ -142,7 +137,7 @@ app.post("/chat/stream", async (req, res) => {
             for await (const chunk of stream) {
                 const anyCunk = chunk as any
                 if (anyCunk?.__interrupt__) {
-                    const interruptData = chunk.__interrupt__[0] as Interrupt<HITLRequest>;
+                    const interruptData = anyCunk.__interrupt__[0] as Interrupt<HITLRequest>;
                     const actionRequests = interruptData.value.actionRequests;
 
                     const resume: HITLResponse = {

@@ -2,7 +2,7 @@ import { Expense } from '../DatabaseSchema/index.js';
 import * as z from "zod"
 import { tool } from "langchain"
 import { getCalendar } from '../store/tokenStore.js';
-
+import type { PipelineStage } from "mongoose";
 
 
 
@@ -23,8 +23,9 @@ export function initTools(userId: string) {
                 }
                 console.log("expense", title, amount)
                 const date = new Date().toISOString().split("T")[0]
-                console.log("Data", date)
-
+                if (!date) {
+                    return "Failed to get the current date";
+                }
                 await Expense.create({ title, amount, date: new Date(date), userId });
                 return JSON.stringify({ success: true, message: "Expense added successfully." })
             } catch (error) {
@@ -107,7 +108,7 @@ export function initTools(userId: string) {
                     };
             }
             console.log("groupFormat", groupFormat)
-            const pipeline = [
+            const pipeline: PipelineStage[] = [
                 {
                     $match: {
                         date: {
@@ -212,10 +213,12 @@ export function initTools(userId: string) {
                     },
                 });
 
-                const busy =
-                    response.data.calendars && attendees.length > 0
-                        ? response.data.calendars[attendees[0]]?.busy || []
-                        : [];
+                const calendars = response?.data?.calendars;
+                const firstAttendee = attendees?.[0];
+
+                const busy = firstAttendee && calendars
+                    ? calendars[firstAttendee]?.busy ?? []
+                    : [];
 
                 if (busy.length === 0) return ["All day free ✅"];
 

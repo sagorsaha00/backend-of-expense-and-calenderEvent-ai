@@ -16,7 +16,9 @@ export interface UserSchema extends Document {
     token_expiry: number;
     createdAt: Date;
     updatedAt: Date;
-    userData?: string
+    userData?: {
+        id: string
+    }
 }
 
 const UserSchemaModel: Schema = new Schema(

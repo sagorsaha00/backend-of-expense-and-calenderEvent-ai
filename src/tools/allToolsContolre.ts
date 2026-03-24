@@ -1,7 +1,7 @@
 import { tool } from "langchain";
 import { z } from "zod";
 import { getCalendar } from "../store/tokenStore";
- 
+
 
 export function createCalendarTools(userId: string) {
 
@@ -63,10 +63,12 @@ export function createCalendarTools(userId: string) {
                     },
                 });
 
+                const firstAttendee = attendees[0];
+
                 const busy =
-                    response.data.calendars && attendees.length > 0
-                        ? response.data.calendars[attendees[0]]?.busy || []
-                        : [];
+                    response.data.calendars && firstAttendee
+                        ? response.data.calendars[firstAttendee]?.busy || []
+                        : ["No attendees provided."];
 
                 if (busy.length === 0) return ["All day free ✅"];
 
@@ -87,6 +89,6 @@ export function createCalendarTools(userId: string) {
         }
     );
 
-    
-    return { createCalendarEvent, getAvailableTimeSlots,}
+
+    return { createCalendarEvent, getAvailableTimeSlots, }
 }
