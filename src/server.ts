@@ -18,7 +18,7 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://expense-tracker-client-server.vercel.app"],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization", "Cache-Control", "Accept"],
     exposedHeaders: ["Content-Type"],
@@ -59,8 +59,6 @@ app.get("/api/callback/login/user", async (req: Request, res: Response) => {
     try {
         const code = req.query.code as string;
         if (!code) return res.status(400).send("No code provided");
-
-        // Use a fresh client just for token exchange
         const tempClient = new google.auth.OAuth2(
             process.env.CLIENT_ID,
             process.env.CLIENT_SECRET,
@@ -107,7 +105,7 @@ app.get("/api/callback/login/user", async (req: Request, res: Response) => {
             <script>
                 window.opener.postMessage(
                     ${JSON.stringify(result)},
-                    'http://localhost:5173'
+                    'https://expense-tracker-client-server.vercel.app'
                 );
                 window.close();
             </script>
