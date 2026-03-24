@@ -104,7 +104,7 @@ app.get("/api/callback/login/user", async (req: Request, res: Response) => {
         res.send(`
             <script>
                 window.opener.postMessage(
-                    ${JSON.stringify(result)},
+                    ${JSON.stringify(result,)},
                     'https://expense-tracker-client-server.vercel.app'
                 );
                 window.close();

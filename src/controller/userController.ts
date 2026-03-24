@@ -3,7 +3,13 @@ import type { Request, Response } from 'express';
 import type { TokenService } from "../token/servcie.js";
 import mongoose from "mongoose";
 import { Expense, User, UserSchema } from "../DatabaseSchema/index.js";
-
+interface SaveGoogleUserResult {
+    userData: UserSchema;
+    token: {
+        accessToken: string;
+        refreshToken: string | null;
+    };
+}
 export class functionController {
     constructor(private tokenService: TokenService) { }
 
@@ -125,7 +131,7 @@ export class functionController {
     }
 
 
-    saveGoogleUser = async (data: any, res?: Response): Promise<UserSchema | Response | void> => {
+    saveGoogleUser = async (data: any, res?: Response): Promise<SaveGoogleUserResult | Response> => {
         try {
             console.log("user", data);
 
@@ -162,15 +168,10 @@ export class functionController {
                 userData: user,
                 token: { accessToken, refreshToken }
             };
-
             if (res) {
-                return res.status(200).json({
-                    userData: result,
-                    accessToken: accessToken,
-                });
+                return res.status(200).json(result);
             }
-
-            return user;
+            return result;
         } catch (err) {
             if (res) {
                 return res.status(500).json({
