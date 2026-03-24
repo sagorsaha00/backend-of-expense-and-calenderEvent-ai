@@ -127,9 +127,9 @@ export class functionController {
 
     saveGoogleUser = async (data: any, res?: Response): Promise<UserSchema | Response | void> => {
         try {
-            console.log("user", data);
+            console.log("user", data.user);
 
-            let user = await User.findOne({ id: data.id });
+            let user = await User.findOne({ id: data.user.id });
 
             if (!user) {
                 user = new User({
