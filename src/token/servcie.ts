@@ -12,6 +12,7 @@ export class TokenService {
 
     genarateAccessToken(payload: JwtPayload) {
         const plainPayload = JSON.parse(JSON.stringify(payload));
+        console.log("plainpayload", plainPayload)
         const accessToken = jwt.sign(plainPayload, ACCESS_SECRET, {
             algorithm: "HS256",
             expiresIn: "15m",
@@ -19,7 +20,7 @@ export class TokenService {
             subject: payload.email,
             issuer: "expense_tracker",
         });
-
+        console.log("accesstoken", accessToken)
         if (!accessToken) {
             throw createHttpError(500, "Failed to generate access token");
         }
