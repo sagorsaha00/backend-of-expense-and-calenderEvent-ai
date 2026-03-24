@@ -1,11 +1,8 @@
-// src/controller/userController.ts
-
-import type { UserSchema } from "../DatabaseSchema";
-import { Expense, User } from "../DatabaseSchema";
 import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
-import type { TokenService } from "../token/servcie";
+import type { TokenService } from "../token/servcie.js";
 import mongoose from "mongoose";
+import { Expense, User, UserSchema } from "../DatabaseSchema/index.js";
 
 export class functionController {
     constructor(private tokenService: TokenService) { }

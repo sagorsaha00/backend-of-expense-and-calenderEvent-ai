@@ -1,6 +1,6 @@
 import { tool } from "langchain";
 import { z } from "zod";
-import { getCalendar } from "../store/tokenStore";
+import { getCalendar } from "../store/tokenStore.js";
 
 
 export function createCalendarTools(userId: string) {

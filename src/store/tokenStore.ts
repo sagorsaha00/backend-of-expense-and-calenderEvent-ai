@@ -1,6 +1,6 @@
 // ─── src/store/tokenStore.ts ─────────────────────────────────────────────────
 import { google } from "googleapis";
-import UserModel from "../DatabaseSchema/userModel";
+import UserModel from "../DatabaseSchema/userModel.js";
 
 const userTokenStore = new Map<string, any>();
 

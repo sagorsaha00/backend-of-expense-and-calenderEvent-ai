@@ -2,9 +2,9 @@ import { ChatGroq } from "@langchain/groq"
 import { MemorySaver, MessagesAnnotation, StateGraph, type LangGraphRunnableConfig, } from "@langchain/langgraph"
 import "dotenv/config";
 import { ToolNode } from "@langchain/langgraph/prebuilt"
-import ConnectDB from "../../db.js"
 import type { AIMessage } from "langchain";
 import { initTools } from "./tool.js";
+import ConnectDB from "../db.js";
 
 
 /**

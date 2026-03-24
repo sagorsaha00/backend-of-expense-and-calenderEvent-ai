@@ -1,8 +1,8 @@
 import express from 'express'
-import { TokenService } from '../src/token/servcie.js';
-import { RefreshTokenSchema } from '../src/DatabaseSchema/refreshToken.js'
-import { functionController } from '../src/controller/userController';
-import verifyAccessToken from '../src/controller/varifyMiddleware';
+import { TokenService } from '../token/servcie.js';
+import { RefreshTokenSchema } from '../DatabaseSchema/refreshToken.js'
+import { functionController } from '../controller/userController.js';
+import verifyAccessToken from '../controller/varifyMiddleware.js';
 
 
 const tokenService = new TokenService(RefreshTokenSchema);

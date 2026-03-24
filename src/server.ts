@@ -1,19 +1,18 @@
+import dotenv from "dotenv";
 import express from "express";
 import type { Request, Response } from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import { google } from "googleapis";
 import axios from "axios";
 import { Command } from "@langchain/langgraph";
 import type { HITLRequest, HITLResponse, Interrupt } from "langchain";
 import ConnectDB from "./db.js";
-import { userController } from "./router/user.js";
-import authroute from './router/user.js'
+import authroute, { userController } from './router/user.js'
 import { HumanMessage } from "@langchain/core/messages";
-import tokenroute from './router/token'
-import { createSupervisorAgent } from "./src/expense/agentToolsCall";
-import { saveUserTokens } from "./src/store/tokenStore";
-import type { UserSchema } from "./src/DatabaseSchema";
+import { createSupervisorAgent } from "./expense/agentToolsCall.js";
+import { saveUserTokens } from "./store/tokenStore.js";
+import type { UserSchema } from "./DatabaseSchema/index.js";
+import tokenroute from './router/token.js'
 dotenv.config();
 
 const app = express();

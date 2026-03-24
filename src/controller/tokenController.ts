@@ -1,4 +1,4 @@
-import type { TokenService } from "../token/servcie";
+import type { TokenService } from "../token/servcie.js";
 import type { Request, Response } from 'express';
 
 export class tokenController {

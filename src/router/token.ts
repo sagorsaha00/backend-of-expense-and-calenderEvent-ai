@@ -1,8 +1,7 @@
 import express from 'express'
-import { tokenController } from '../src/controller/tokenController'
-import { RefreshTokenSchema } from '../src/DatabaseSchema/refreshToken.js'
-import { TokenService } from '../src/token/servcie'
-import verifyAccessToken from '../src/controller/varifyMiddleware'
+import { tokenController } from '../controller/tokenController.js'
+import { RefreshTokenSchema } from '../DatabaseSchema/refreshToken.js'
+import { TokenService } from '../token/servcie.js'
 
 
 const router = express.Router()
