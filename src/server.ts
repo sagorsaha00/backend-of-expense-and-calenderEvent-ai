@@ -89,8 +89,12 @@ app.get("/api/callback/login/user", async (req: Request, res: Response) => {
         const result: UserSchema = await userController.saveGoogleUser(user) as UserSchema;
 
 
-        const id = result?.userData!.id as string
-        console.log("result", result)
+        const id = result?.userData?.id;
+
+        if (!id) {
+            console.error("User ID not found in result:", result);
+            return res.status(500).send("User saved but ID not found");
+        }
         console.log("id", id)
         saveUserTokens(id, {
             access_token: tokens.access_token,
