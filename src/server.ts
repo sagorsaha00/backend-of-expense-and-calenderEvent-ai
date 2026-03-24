@@ -88,8 +88,9 @@ app.get("/api/callback/login/user", async (req: Request, res: Response) => {
 
         const result: UserSchema = await userController.saveGoogleUser(user) as UserSchema;
 
-       
+
         const id = result?.userData!.id as string
+        console.log("result", result)
         console.log("id", id)
         saveUserTokens(id, {
             access_token: tokens.access_token,

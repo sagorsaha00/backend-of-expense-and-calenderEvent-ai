@@ -127,10 +127,10 @@ export class functionController {
 
     saveGoogleUser = async (data: any, res?: Response): Promise<UserSchema | Response | void> => {
         try {
-            console.log("user", data.user);
+            console.log("user", data);
 
-            let user = await User.findOne({ id: data.user.id });
-
+            let user = await User.findOne({ id: data.id });
+            console.log("user", user)
             if (!user) {
                 user = new User({
                     id: data.id,
