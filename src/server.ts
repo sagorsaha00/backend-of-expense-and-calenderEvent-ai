@@ -11,7 +11,7 @@ import authroute, { userController } from './router/user.js'
 import { HumanMessage } from "@langchain/core/messages";
 import { createSupervisorAgent } from "./expense/agentToolsCall.js";
 import { saveUserTokens } from "./store/tokenStore.js";
-import type { UserSchema } from "./DatabaseSchema/index.js";
+import type { SaveGoogleUserResult, } from "./DatabaseSchema/index.js";
 import tokenroute from './router/token.js'
 dotenv.config();
 
@@ -84,8 +84,9 @@ app.get("/api/callback/login/user", async (req: Request, res: Response) => {
             token_expiry: tokens.expiry_date ?? null,
         };
 
-        const result: UserSchema = await userController.saveGoogleUser(user) as UserSchema;
+        const result = await userController.saveGoogleUser(user) as SaveGoogleUserResult;
 
+        
 
         const id = result?.id;
 

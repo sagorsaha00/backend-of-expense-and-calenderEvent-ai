@@ -2,14 +2,8 @@ import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 import type { TokenService } from "../token/servcie.js";
 import mongoose from "mongoose";
-import { Expense, User, UserSchema } from "../DatabaseSchema/index.js";
-interface SaveGoogleUserResult {
-    userData: UserSchema;
-    token: {
-        accessToken: string;
-        refreshToken: string | null;
-    };
-}
+import { Expense, SaveGoogleUserResult, User, UserSchema } from "../DatabaseSchema/index.js";
+
 export class functionController {
     constructor(private tokenService: TokenService) { }
 

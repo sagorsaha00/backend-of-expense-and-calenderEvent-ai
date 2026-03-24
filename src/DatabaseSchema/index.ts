@@ -20,7 +20,14 @@ export interface UserSchema extends Document {
         id: string
     }
 }
-
+export interface SaveGoogleUserResult {
+    id?: string;
+    userData: UserSchema;
+    token: {
+        accessToken: string;
+        refreshToken: string | null;
+    };
+}
 const UserSchemaModel: Schema = new Schema(
     {
         id: { type: String, unique: true, sparse: true },
