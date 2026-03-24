@@ -11,7 +11,7 @@ import authroute, { userController } from './router/user.js'
 import { HumanMessage } from "@langchain/core/messages";
 import { createSupervisorAgent } from "./expense/agentToolsCall.js";
 import { saveUserTokens } from "./store/tokenStore.js";
-import type { SaveGoogleUserResult, } from "./DatabaseSchema/index.js";
+import type { SaveGoogleUserResult, UserSchema } from "./DatabaseSchema/index.js";
 import tokenroute from './router/token.js'
 dotenv.config();
 
@@ -86,10 +86,9 @@ app.get("/api/callback/login/user", async (req: Request, res: Response) => {
 
         const result = await userController.saveGoogleUser(user) as SaveGoogleUserResult;
 
-        
 
-        const id = result?.id;
-
+        const id = result?.userData?.id;
+        console.log("id", id)
         if (!id) {
             console.error("User ID not found in result:", result);
             return res.status(500).send("User saved but ID not found");
@@ -105,7 +104,7 @@ app.get("/api/callback/login/user", async (req: Request, res: Response) => {
         res.send(`
             <script>
                 window.opener.postMessage(
-                    ${JSON.stringify(result,)},
+                    ${JSON.stringify(result)},
                     'https://expense-tracker-client-server.vercel.app'
                 );
                 window.close();
