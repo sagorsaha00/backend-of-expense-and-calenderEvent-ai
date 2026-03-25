@@ -14,6 +14,6 @@ const tokencontroller = new tokenController(tokenService)
 
 
 
-router.post('/refreshToken', verifyAccessToken, (req, res) => tokencontroller.refreshToken(req, res))
+router.post('/refreshToken',  (req, res) => tokencontroller.refreshToken(req, res))
 
 export default router
