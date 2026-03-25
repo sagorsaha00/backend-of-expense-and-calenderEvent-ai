@@ -20,8 +20,8 @@ router.get('/test', verifyAccessToken, (req, res) => res.status(201).json({
 }))
 router.post('/register', (req, res) => userController.registerFuncUser(req, res))
 router.post('/login', (req, res) => userController.loginUser(req, res))
-router.get("/grouped/:userId", (req, res) => userController.getExpense(req, res));
-router.post("/setpassword", (req, res) => userController.setPassword(req, res));
+router.get("/grouped/:userId", verifyAccessToken, (req, res) => userController.getExpense(req, res));
+router.post("/setpassword", verifyAccessToken, (req, res) => userController.setPassword(req, res));
 router.get('/debug-token', verifyAccessToken, (req, res) => {
     const authHeader = req.headers.bearer;
 
