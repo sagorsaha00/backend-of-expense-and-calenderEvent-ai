@@ -29,6 +29,9 @@ const verifyAccessToken = (req: Request, res: Response, next: NextFunction) => {
         ) as JwtPayload;
 
         (req as any).user = decoded;
+        console.log("req", (req as any).user)
+        console.log("req", req)
+        console.log("decode", decoded)
         next();
     } catch (error) {
         if (error instanceof jwt.TokenExpiredError) {
