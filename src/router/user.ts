@@ -22,17 +22,18 @@ router.post('/register', (req, res) => userController.registerFuncUser(req, res)
 router.post('/login', (req, res) => userController.loginUser(req, res))
 router.get("/grouped/:userId", (req, res) => userController.getExpense(req, res));
 router.post("/setpassword", (req, res) => userController.setPassword(req, res));
-router.get('/debug-token', (req, res) => {
+router.get('/debug-token', verifyAccessToken, (req, res) => {
     const authHeader = req.headers.bearer;
 
 
-
+    const ACCESS_SECRET = "access_secret_hgfhfdshfgyertvvbvfdf";
     const token = authHeader as string
-
+    console.log("token", token)
+    console.log("SECRET:", process.env.ACCESS_SECRET);
     if (!token) return res.json({ error: "No token" });
 
     try {
-        const decoded = jwt.verify(token, process.env.ACCESS_SECRET as string);
+        const decoded = jwt.verify(token, ACCESS_SECRET as string);
         console.log("decoded", decoded)
         res.json({ success: true, decoded });
     } catch (err: any) {

@@ -10,29 +10,33 @@ interface JwtPayload {
 
 const verifyAccessToken = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
-    console.log("authHeadre", authHeader)
-    console.log("authHeader", authHeader)
+    const bearerHeader = req.headers.bearer;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    let token: string | undefined;
+
+    // ✅ support both (standard + your custom)
+    if (authHeader) {
+        token = authHeader.split(" ")[1];
+    } else if (bearerHeader) {
+        token = bearerHeader as string;
+    }
+
+    if (!token) {
         return res.status(401).json({ message: "No token provided" });
     }
 
-    const token = authHeader.split(" ")[1];
-    console.log("token", token)
-    if (!token) {
-        return res.status(401).json({ message: "Invalid token format" });
-    }
+    const ACCESS_SECRET = "access_secret_hgfhfdshfgyertvvbvfdf";
 
     try {
-        const decoded = jwt.verify(
-            token,
-            process.env.ACCESS_SECRET as string
-        ) as JwtPayload;
+        const decoded = jwt.verify(token, ACCESS_SECRET) as JwtPayload;
 
         (req as any).user = decoded;
-        console.log("decode", decoded)
+        console.log("decoded:", decoded);
+
         next();
     } catch (error) {
+        console.log("JWT ERROR:", error);
+
         if (error instanceof jwt.TokenExpiredError) {
             return res.status(401).json({ message: "Access token expired" });
         }
@@ -44,5 +48,4 @@ const verifyAccessToken = (req: Request, res: Response, next: NextFunction) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
-
 export default verifyAccessToken;
