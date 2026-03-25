@@ -12,7 +12,6 @@ export class TokenService {
 
     genarateAccessToken(payload: JwtPayload) {
         const plainPayload = JSON.parse(JSON.stringify(payload));
-        console.log("plainpayload", plainPayload)
         const accessToken = jwt.sign(plainPayload, ACCESS_SECRET, {
             algorithm: "HS256",
             expiresIn: "15m",
@@ -28,7 +27,6 @@ export class TokenService {
     }
 
     genarateRefreshToken(payload: JwtPayload) {
-
         const refreshToken = jwt.sign(payload, REFRESH_SECRET, {
             algorithm: "HS256",
             expiresIn: "7d",

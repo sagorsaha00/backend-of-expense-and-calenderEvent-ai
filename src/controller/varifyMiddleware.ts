@@ -10,6 +10,7 @@ interface JwtPayload {
 
 const verifyAccessToken = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
+    console.log("authHeadre", authHeader)
     console.log("authHeader", authHeader)
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -25,12 +26,10 @@ const verifyAccessToken = (req: Request, res: Response, next: NextFunction) => {
     try {
         const decoded = jwt.verify(
             token,
-            process.env.ACCESS_TOKEN_SECRET as string
+            process.env.ACCESS_SECRET as string
         ) as JwtPayload;
 
         (req as any).user = decoded;
-        console.log("req", (req as any).user)
-        console.log("req", req)
         console.log("decode", decoded)
         next();
     } catch (error) {
