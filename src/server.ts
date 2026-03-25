@@ -28,7 +28,7 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(express.json());
 
-// ─── Single shared OAuth2 client (credentials set after login) ───────────────
+
 const oauth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID,
     process.env.CLIENT_SECRET,
